@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee" >
+
+    <!-- this is configuration for tomcat to know where to find our servlets  -->
+    <servlet>
+        <servlet-name>TaskServlet</servlet-name>
+        <servlet-class>dev.mckinney.servlets.TaskServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>TaskServlet</servlet-name>
+        <url-pattern>/tasks</url-pattern>
+    </servlet-mapping>
+
+</web-app>

@@ -1,0 +1,8 @@
+svg.icon {
+    cursor: pointer;
+}
+
+svg.icon:hover {
+    transform: scale(1.25);
+    fill: #dc3545;
+}
