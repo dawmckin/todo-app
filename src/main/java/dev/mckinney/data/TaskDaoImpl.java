@@ -15,13 +15,13 @@ public class TaskDaoImpl implements TaskDao{
         String sql = "";
         switch (criteria) {
             case "all":
-                sql = "select * from task order by task_id";
+                sql = "select * from task order by due_date";
                 break;
             case "pending":
-                sql = "select * from task where is_completed = false order by task_id";
+                sql = "select * from task where is_completed = false order by due_date";
                 break;
             case "completed":
-                sql = "select * from task where is_completed = true order by task_id";
+                sql = "select * from task where is_completed = true order by due_date";
                 break;
             default:
                 throw new RuntimeException("not supported criteria");
@@ -41,7 +41,7 @@ public class TaskDaoImpl implements TaskDao{
                 String name = rs.getString("task_name");
                 boolean isCompleted  = rs.getBoolean("is_completed");
                 String description = rs.getString("description");
-                LocalDate dueDate = rs.getObject("due_date", LocalDate.class);
+                LocalDate dueDate = rs.getDate("due_date").toLocalDate();
                 Task t = new Task(id, name, isCompleted, description, dueDate);
                 tasks.add(t);
             }
@@ -126,6 +126,23 @@ public class TaskDaoImpl implements TaskDao{
             e.printStackTrace();
         }
 
+        return 0;
+    }
+
+    public int updateTask(Task task) {
+        String sql = "update task set task_name = ?, description = ?, due_date = ? where task_id = ?";
+
+        try {
+            Connection connection = connectionService.establishConnection();
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, task.getTaskName());
+            pstmt.setString(2, task.getDescription());
+            pstmt.setDate(3, Date.valueOf(task.getDueDate()));
+            pstmt.setInt(4, task.getId());
+            return pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 }

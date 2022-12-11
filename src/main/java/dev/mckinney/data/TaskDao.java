@@ -20,4 +20,6 @@ public interface TaskDao {
 
     public int removeTask(int id);
 
+    public int updateTask(Task task);
+
 }

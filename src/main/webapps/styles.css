@@ -4,5 +4,16 @@ svg.icon {
 
 svg.icon:hover {
     transform: scale(1.25);
+}
+
+svg.bi-trash:hover {
     fill: #dc3545;
+}
+
+svg.bi-check-lg:hover {
+    fill: #198754;
+}
+
+svg.bi-pencil:hover {
+    fill: #ffc107;
 }

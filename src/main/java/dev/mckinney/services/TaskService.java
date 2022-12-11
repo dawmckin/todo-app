@@ -52,4 +52,8 @@ public class TaskService {
         return taskData.removeTask(id);
     }
 
+    public int editTask(Task task) {
+        return taskData.updateTask(task);
+    }
+
 }

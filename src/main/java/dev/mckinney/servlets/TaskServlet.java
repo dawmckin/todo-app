@@ -2,6 +2,7 @@ package dev.mckinney.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.sun.corba.se.spi.orbutil.threadpool.NoSuchThreadPoolException;
 import dev.mckinney.models.Task;
 import dev.mckinney.services.TaskService;
 
@@ -34,6 +35,7 @@ public class TaskServlet extends HttpServlet {
             default:
                 tasks = taskService.getPending();
         }
+
         objectMapper.registerModule(new JavaTimeModule());
         String tasksJson = objectMapper.writeValueAsString(tasks);
 
@@ -74,6 +76,33 @@ public class TaskServlet extends HttpServlet {
                 res.setStatus(400);
             } else {
                 taskService.removeTask(task.getId());
+                res.setStatus(201);
+            }
+        }
+    }
+
+    @Override
+    public void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        System.out.println("PUT request to /tasks");
+
+        try (BufferedReader reader = req.getReader();
+             PrintWriter pw = res.getWriter()) {
+
+            String parameter = req.getParameter("action");
+            System.out.println(parameter);
+            String taskJson = reader.readLine();
+            Task task = objectMapper.readValue(taskJson, Task.class);
+            System.out.println(task);
+
+            if(task == null) {
+                res.setStatus(400);
+            } else {
+                switch (parameter) {
+                    case "complete":
+                        taskService.completeTask(task.getId());
+                    case "edit":
+                        taskService.editTask(task);
+                }
                 res.setStatus(201);
             }
         }
