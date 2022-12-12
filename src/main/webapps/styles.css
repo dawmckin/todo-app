@@ -1,3 +1,24 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+#back-to-top {
+    z-index: 100;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+
+#alertPlaceholder {
+    z-index: 100;
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25%;
+}
+
 svg.icon {
     cursor: pointer;
 }
@@ -6,14 +27,14 @@ svg.icon:hover {
     transform: scale(1.25);
 }
 
-svg.bi-trash:hover {
+svg.bi-trash {
     fill: #dc3545;
 }
 
-svg.bi-check-lg:hover {
+svg.bi-check-lg {
     fill: #198754;
 }
 
-svg.bi-pencil:hover {
+svg.bi-pencil {
     fill: #ffc107;
 }

@@ -89,10 +89,8 @@ public class TaskServlet extends HttpServlet {
              PrintWriter pw = res.getWriter()) {
 
             String parameter = req.getParameter("action");
-            System.out.println(parameter);
             String taskJson = reader.readLine();
             Task task = objectMapper.readValue(taskJson, Task.class);
-            System.out.println(task);
 
             if(task == null) {
                 res.setStatus(400);
@@ -100,8 +98,10 @@ public class TaskServlet extends HttpServlet {
                 switch (parameter) {
                     case "complete":
                         taskService.completeTask(task.getId());
+                        break;
                     case "edit":
                         taskService.editTask(task);
+                        break;
                 }
                 res.setStatus(201);
             }
