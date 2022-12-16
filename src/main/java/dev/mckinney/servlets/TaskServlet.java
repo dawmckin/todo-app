@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sun.corba.se.spi.orbutil.threadpool.NoSuchThreadPoolException;
 import dev.mckinney.models.Task;
 import dev.mckinney.services.TaskService;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,10 +20,11 @@ public class TaskServlet extends HttpServlet {
 
     private TaskService taskService = new TaskService();
     private ObjectMapper objectMapper = new ObjectMapper();
+    private final Logger logger = Logger.getLogger(TaskServlet.class);
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        System.out.println("GET request to /tasks");
+        logger.info("GET request sent to /tasks");
         String parameter = req.getParameter("criteria");
         ArrayList<Task> tasks = new ArrayList<>();
         switch (parameter) {
@@ -35,7 +37,7 @@ public class TaskServlet extends HttpServlet {
             default:
                 tasks = taskService.getPending();
         }
-
+        logger.info(tasks.size() + " task(s) obtained from DB");
         objectMapper.registerModule(new JavaTimeModule());
         String tasksJson = objectMapper.writeValueAsString(tasks);
 
@@ -47,7 +49,7 @@ public class TaskServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
-        System.out.println("POST request to /tasks");
+        logger.info("POST request sent to /tasks");
         try (BufferedReader reader = req.getReader();
             PrintWriter pw = res.getWriter()) {
 
@@ -57,7 +59,8 @@ public class TaskServlet extends HttpServlet {
             if(task == null || task.getTaskName() == null || task.getTaskName().isEmpty()) {
                 res.setStatus(400);
             } else {
-                taskService.addNewTask(task);
+                int count = taskService.addNewTask(task);
+                logger.info(count + " task(s) added to DB");
                 res.setStatus(201);
             }
         }
@@ -65,7 +68,7 @@ public class TaskServlet extends HttpServlet {
 
     @Override
     public void doDelete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        System.out.println("DELETE request to /tasks");
+        logger.info("DELETE request to /tasks");
         try (BufferedReader reader = req.getReader();
              PrintWriter pw = res.getWriter()) {
 
@@ -75,7 +78,8 @@ public class TaskServlet extends HttpServlet {
             if(task == null) {
                 res.setStatus(400);
             } else {
-                taskService.removeTask(task.getId());
+                int count = taskService.removeTask(task.getId());
+                logger.info(count + " task(s) deleted from DB");
                 res.setStatus(201);
             }
         }
@@ -83,7 +87,7 @@ public class TaskServlet extends HttpServlet {
 
     @Override
     public void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        System.out.println("PUT request to /tasks");
+        logger.info("PUT request to /tasks");
 
         try (BufferedReader reader = req.getReader();
              PrintWriter pw = res.getWriter()) {
@@ -97,10 +101,12 @@ public class TaskServlet extends HttpServlet {
             } else {
                 switch (parameter) {
                     case "complete":
-                        taskService.completeTask(task.getId());
+                        int completeCount = taskService.completeTask(task.getId());
+                        logger.info(completeCount + " task(s) updated from DB");
                         break;
                     case "edit":
-                        taskService.editTask(task);
+                        int editCount = taskService.editTask(task);
+                        logger.info(editCount + " task(s) updated from DB");
                         break;
                 }
                 res.setStatus(201);

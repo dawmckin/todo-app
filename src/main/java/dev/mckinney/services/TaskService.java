@@ -35,17 +35,17 @@ public class TaskService {
         return taskData.getTaskById(id);
     }
 
-    public void addNewTask(String name) {
+    public int addNewTask(String name) {
         Task t = new Task(name);
-        taskData.addTask(t);
+        return taskData.addTask(t);
     }
 
-    public void addNewTask(Task t) {
-        taskData.addTask(t);
+    public int addNewTask(Task t) {
+        return taskData.addTask(t);
     }
 
-    public void completeTask(int id) {
-        taskData.completeTaskById(id);
+    public int completeTask(int id) {
+        return taskData.completeTaskById(id);
     }
 
     public int removeTask(int id) {
